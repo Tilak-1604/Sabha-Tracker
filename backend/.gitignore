@@ -1,0 +1,5 @@
+# Backend .gitignore
+node_modules/
+.env
+# ⚠️  Firebase Admin SDK service account — contains private key — NEVER commit this
+firebase-service-account.json
