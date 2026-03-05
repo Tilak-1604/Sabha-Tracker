@@ -26,8 +26,37 @@
   /* Misc */
   --radius: 12px;
   --radius-sm: 8px;
-  --shadow: 0 4px 24px hsla(225, 25%, 3%, 0.5);
+  /* Shadow */
+  --shadow-color: hsla(225, 25%, 3%, 0.5);
+  --shadow: 0 4px 24px var(--shadow-color);
   --transition: 0.2s ease;
+}
+
+/* ─── Light Theme Overrides ───────────────────────────────────── */
+html.theme-light {
+  /* Brand tweaks for contrast if needed, mostly kept similar */
+  --brand: hsl(250, 80%, 58%);
+  --brand-lt: hsl(250, 80%, 68%);
+  --brand-dk: hsl(250, 80%, 46%);
+
+  /* Surface */
+  --bg: hsl(225, 20%, 98%);
+  --surface: hsl(0, 0%, 100%);
+  --surface2: hsl(225, 20%, 94%);
+  --border: hsl(225, 20%, 88%);
+
+  /* Text */
+  --text: hsl(225, 30%, 12%);
+  --text-2: hsl(225, 15%, 35%);
+  --text-3: hsl(225, 10%, 50%);
+
+  /* Semantic - slightly darker for white bg contrast */
+  --safe: hsl(145, 75%, 36%);
+  --warning: hsl(38, 95%, 46%);
+  --danger: hsl(354, 80%, 52%);
+
+  /* Misc */
+  --shadow-color: hsla(225, 20%, 30%, 0.12);
 }
 
 /* ─── Reset ───────────────────────────────────────────────────── */

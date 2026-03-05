@@ -10,12 +10,15 @@ export default defineConfig({
       // Let the plugin inject the manifest link — do NOT add it manually in index.html
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icons/*.png'],
+      workbox: {
+        importScripts: ['/firebase-messaging-sw.js'],
+      },
       manifest: {
         name: 'Hostel Sabha Tracker',
         short_name: 'Sabha Tracker',
         description: 'Track hostel sabha attendance, leaves, Cheshta and fines.',
-        theme_color: 'hsl(225, 20%, 8%)',
-        background_color: 'hsl(225, 20%, 8%)',
+        theme_color: '#f0f2f8', // Neutral light default so it doesn't clash; dynamic JS changes it
+        background_color: '#101114',
         display: 'standalone',
         orientation: 'portrait',
         start_url: '/dashboard',

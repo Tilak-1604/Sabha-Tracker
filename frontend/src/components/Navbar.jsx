@@ -1,11 +1,13 @@
 import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
-import { User } from 'lucide-react';
+import { User, Sun, Moon } from 'lucide-react';
 
 export default function Navbar() {
     const { user } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const [showCheshtaUI, setShowCheshtaUI] = useState(false);
 
     useEffect(() => {
@@ -53,8 +55,17 @@ export default function Navbar() {
                 </div>
 
                 <div className="navbar-user">
+                    <button
+                        onClick={toggleTheme}
+                        className="btn btn-ghost"
+                        style={{ padding: '0.4rem', border: 'none', background: 'transparent' }}
+                        aria-label="Toggle theme"
+                    >
+                        {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                    </button>
+
                     <Link to="/profile" className="user-chip-link" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
-                        <div className="user-chip">
+                        <div className="user-chip" style={{ display: 'none', '@media (minWidth: 600px)': { display: 'flex' } }}>
                             <span className="user-chip-name">{user?.name}</span>
                             <span className="user-chip-roll">{user?.rollNo} · Room {user?.roomNo}</span>
                         </div>

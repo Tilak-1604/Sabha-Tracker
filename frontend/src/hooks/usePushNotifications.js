@@ -45,17 +45,12 @@ export function usePushNotifications() {
         }
     }, [isEnabled]);
 
-    const registerSW = useCallback(async () => {
+    const getActiveSW = useCallback(async () => {
         if (!('serviceWorker' in navigator)) {
             throw new Error('Service workers are not supported in this browser.');
         }
-        // Register (or retrieve existing) the FCM service worker
-        const registration = await navigator.serviceWorker.register(
-            '/firebase-messaging-sw.js',
-            { scope: '/' }
-        );
-        // Wait until the SW is active
-        await navigator.serviceWorker.ready;
+        // Wait until the unified PWA service worker is active
+        const registration = await navigator.serviceWorker.ready;
         return registration;
     }, []);
 
@@ -75,8 +70,8 @@ export function usePushNotifications() {
                 return; // user denied — nothing to do
             }
 
-            // 2. Register service worker
-            const swRegistration = await registerSW();
+            // 2. Get the unified PWA service worker (already registered by vite-plugin-pwa)
+            const swRegistration = await getActiveSW();
 
             // 3. Get FCM token
             const token = await getToken(messaging, {
@@ -103,7 +98,7 @@ export function usePushNotifications() {
         } finally {
             setIsLoading(false);
         }
-    }, [registerSW]);
+    }, [getActiveSW]);
 
     const disableNotifications = useCallback(async () => {
         const token = localStorage.getItem(LOCAL_STORAGE_KEY);
