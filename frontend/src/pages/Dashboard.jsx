@@ -299,24 +299,24 @@ export default function Dashboard() {
                                 </span>
                             </p>
                         </div>
-                        <div style={{ borderLeft: '1px solid var(--border)', paddingLeft: '1.5rem' }}>
-                            <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)' }}>
+                        <div style={{ paddingLeft: '1.5rem', flex: '1 1 120px' }}>
+                            <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)', marginBottom: '0.2rem' }}>
                                 Counted Till
                             </p>
                             <p style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text)' }}>
                                 {fmtDate(data.countedUntilDate)}
                             </p>
                         </div>
-                        <div style={{ borderLeft: '1px solid var(--border)', paddingLeft: '1.5rem' }}>
-                            <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)' }}>
+                        <div style={{ paddingLeft: '1.5rem', flex: '1 1 120px' }}>
+                            <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)', marginBottom: '0.2rem' }}>
                                 Leave‑Blocked
                             </p>
                             <p style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-2)' }}>
                                 M: {data.blockedMorningSessionsCount} · E: {data.blockedEveningSessionsCount}
                             </p>
                         </div>
-                        <div style={{ borderLeft: '1px solid var(--border)', paddingLeft: '1.5rem' }}>
-                            <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)' }}>
+                        <div style={{ paddingLeft: '1.5rem', flex: '1 1 120px' }}>
+                            <p style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-3)', marginBottom: '0.2rem' }}>
                                 Fine Mode
                             </p>
                             <p style={{ fontSize: '0.9rem', fontWeight: 600, color: data.fineMode === 'STRICT' ? 'var(--warning)' : 'var(--safe)' }}>

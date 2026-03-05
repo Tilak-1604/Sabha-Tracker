@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import TextInput from '../components/TextInput';
+import PasswordInput from '../components/PasswordInput';
+import FormErrorBanner from '../components/FormErrorBanner';
 
 export default function Register() {
     const [form, setForm] = useState({ name: '', rollNo: '', roomNo: '', password: '' });
@@ -10,8 +13,10 @@ export default function Register() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleChange = (e) =>
+    const handleChange = (e) => {
         setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+        setError('');
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -44,59 +49,59 @@ export default function Register() {
                 </div>
 
                 <form className="form-stack" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="name">Full Name</label>
-                        <input
-                            id="name"
-                            name="name"
-                            type="text"
-                            placeholder="Your full name"
-                            value={form.name}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                    <FormErrorBanner error={error} />
 
-                    <div className="form-group">
-                        <label htmlFor="rollNo">Roll Number</label>
-                        <input
-                            id="rollNo"
-                            name="rollNo"
-                            type="text"
-                            placeholder="e.g. CS2301"
-                            value={form.rollNo}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                    <TextInput
+                        label="Full Name"
+                        id="name"
+                        name="name"
+                        type="text"
+                        placeholder="Your full name"
+                        value={form.name}
+                        onChange={handleChange}
+                        autoComplete="name"
+                        required
+                    />
 
-                    <div className="form-group">
-                        <label htmlFor="roomNo">Room Number</label>
-                        <input
-                            id="roomNo"
-                            name="roomNo"
-                            type="text"
-                            placeholder="e.g. A-204"
-                            value={form.roomNo}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
+                    <TextInput
+                        label="Roll Number"
+                        id="rollNo"
+                        name="rollNo"
+                        type="text"
+                        placeholder="e.g. CS2301"
+                        value={form.rollNo}
+                        onChange={handleChange}
+                        autoCapitalize="none"
+                        autoCorrect="off"
+                        spellCheck="false"
+                        autoComplete="username"
+                        required
+                    />
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="Min 6 characters"
-                            value={form.password}
-                            onChange={handleChange}
-                            minLength={6}
-                            autoComplete="new-password"
-                            required
-                        />
-                    </div>
+                    <TextInput
+                        label="Room Number"
+                        id="roomNo"
+                        name="roomNo"
+                        type="text"
+                        inputMode="text"
+                        placeholder="e.g. A-204"
+                        value={form.roomNo}
+                        onChange={handleChange}
+                        required
+                    />
+
+                    <PasswordInput
+                        label="Password"
+                        id="password"
+                        name="password"
+                        placeholder="Min 6 characters"
+                        value={form.password}
+                        onChange={handleChange}
+                        minLength={6}
+                        autoComplete="new-password"
+                        enterKeyHint="done"
+                        required
+                    />
 
                     {error && <p className="form-error">{error}</p>}
 
@@ -106,6 +111,7 @@ export default function Register() {
                         className="btn btn-primary btn-full"
                         disabled={loading}
                     >
+                        {loading && <div className="spinner" style={{ width: '18px', height: '18px', borderWidth: '2px', borderTopColor: '#fff', marginRight: '0.5rem' }} />}
                         {loading ? 'Creating account…' : 'Create Account'}
                     </button>
                 </form>

@@ -121,11 +121,11 @@ export default function MarkAttendance() {
                 </button>
             </div>
             {blocked ? (
-                <p style={{ fontSize: '0.78rem', color: 'var(--warning)', marginTop: '0.25rem' }}>
-                    Blocked (Leave)
-                </p>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', marginTop: '0.4rem', color: 'var(--danger)', background: 'hsla(354, 80%, 58%, 0.1)', padding: '0.4rem 0.6rem', borderRadius: '4px', fontSize: '0.8rem', fontWeight: 600 }}>
+                    <span style={{ fontSize: '1rem' }}>🚫</span> Leave (Blocked)
+                </div>
             ) : value === null && (
-                <p style={{ fontSize: '0.78rem', color: 'var(--text-3)', marginTop: '0.25rem' }}>
+                <p style={{ fontSize: '0.85rem', color: 'var(--text-3)', marginTop: '0.4rem', fontWeight: 500 }}>
                     Not marked — tap Present or Absent
                 </p>
             )}
@@ -140,6 +140,26 @@ export default function MarkAttendance() {
                 <div className="dashboard-header" style={{ marginBottom: '1.5rem' }}>
                     <h1 className="page-title">Mark Attendance</h1>
                 </div>
+
+                {/* Pending Cheshta Warning Chip */}
+                {cheshtaStatus && cheshtaStatus.hasPendingCheshta && (
+                    <div style={{
+                        marginBottom: '1.25rem',
+                        background: 'hsla(38, 95%, 52%, 0.15)',
+                        border: '1px solid hsla(38, 95%, 52%, 0.4)',
+                        borderRadius: 'var(--radius-sm)',
+                        padding: '0.75rem 1rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        color: 'var(--warning)'
+                    }}>
+                        <span style={{ fontSize: '1.2rem' }}>⚠️</span>
+                        <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>
+                            Pending Cheshta – fine will be added for recent short leave(s).
+                        </span>
+                    </div>
+                )}
 
                 <div className="card">
                     <form className="form-stack" onSubmit={handleSubmit}>

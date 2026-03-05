@@ -1,11 +1,11 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
+import { User } from 'lucide-react';
 
 export default function Navbar() {
-    const { user, logout } = useAuth();
-    const navigate = useNavigate();
+    const { user } = useAuth();
     const [showCheshtaUI, setShowCheshtaUI] = useState(false);
 
     useEffect(() => {
@@ -17,11 +17,6 @@ export default function Navbar() {
                 .catch(err => console.error("Failed to load cheshta status for navbar", err));
         }
     }, [user]);
-
-    const handleLogout = () => {
-        logout();
-        navigate('/login', { replace: true });
-    };
 
     return (
         <nav className="navbar">
@@ -58,13 +53,24 @@ export default function Navbar() {
                 </div>
 
                 <div className="navbar-user">
-                    <div className="user-chip">
-                        <span className="user-chip-name">{user?.name}</span>
-                        <span className="user-chip-roll">{user?.rollNo} · Room {user?.roomNo}</span>
-                    </div>
-                    <button className="btn btn-ghost btn-sm" onClick={handleLogout}>
-                        Logout
-                    </button>
+                    <Link to="/profile" className="user-chip-link" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+                        <div className="user-chip">
+                            <span className="user-chip-name">{user?.name}</span>
+                            <span className="user-chip-roll">{user?.rollNo} · Room {user?.roomNo}</span>
+                        </div>
+                        <div style={{
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            background: 'hsla(250, 75%, 62%, 0.15)',
+                            color: 'var(--brand)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <User size={18} />
+                        </div>
+                    </Link>
                 </div>
             </div>
         </nav>

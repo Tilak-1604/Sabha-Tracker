@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
+import TextInput from '../components/TextInput';
+import PasswordInput from '../components/PasswordInput';
+import FormErrorBanner from '../components/FormErrorBanner';
 
 export default function Login() {
     const [form, setForm] = useState({ rollNo: '', password: '' });
@@ -10,8 +13,10 @@ export default function Login() {
     const { login } = useAuth();
     const navigate = useNavigate();
 
-    const handleChange = (e) =>
+    const handleChange = (e) => {
         setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+        setError(''); // Clear global an API error when typed
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,32 +45,39 @@ export default function Login() {
                 </div>
 
                 <form className="form-stack" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="rollNo">Roll Number</label>
-                        <input
-                            id="rollNo"
-                            name="rollNo"
-                            type="text"
-                            placeholder="e.g. CS2301"
-                            value={form.rollNo}
-                            onChange={handleChange}
-                            autoComplete="username"
-                            required
-                        />
-                    </div>
+                    <FormErrorBanner error={error} />
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            id="password"
-                            name="password"
-                            type="password"
-                            placeholder="••••••••"
-                            value={form.password}
-                            onChange={handleChange}
-                            autoComplete="current-password"
-                            required
-                        />
+                    <TextInput
+                        label="Roll Number"
+                        id="rollNo"
+                        name="rollNo"
+                        type="text"
+                        placeholder="e.g. CS2301"
+                        value={form.rollNo}
+                        onChange={handleChange}
+                        autoComplete="username"
+                        autoCapitalize="none"
+                        autoCorrect="off"
+                        spellCheck="false"
+                        required
+                    />
+
+                    <PasswordInput
+                        label="Password"
+                        id="password"
+                        name="password"
+                        placeholder="••••••••"
+                        value={form.password}
+                        onChange={handleChange}
+                        autoComplete="current-password"
+                        enterKeyHint="done"
+                        required
+                    />
+
+                    <div style={{ textAlign: 'right', marginTop: '-0.5rem' }}>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-3)' }}>
+                            Forgot password? Contact hostel office to reset.
+                        </span>
                     </div>
 
                     {error && <p className="form-error">{error}</p>}
@@ -76,6 +88,7 @@ export default function Login() {
                         className="btn btn-primary btn-full"
                         disabled={loading}
                     >
+                        {loading && <div className="spinner" style={{ width: '18px', height: '18px', borderWidth: '2px', borderTopColor: '#fff', marginRight: '0.5rem' }} />}
                         {loading ? 'Signing in…' : 'Sign In'}
                     </button>
                 </form>
