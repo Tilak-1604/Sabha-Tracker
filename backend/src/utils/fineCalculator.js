@@ -91,7 +91,7 @@ function calcSession(effectiveDays, presentDays, absentDays, missingDays, type, 
       level = 'warning';
     } else {
       rule = 'ABSENT_3';
-      fine = (absentDays || 0) * 3;
+      fine = (absentDays || 0) * 5;
       level = 'safe';
     }
   }
