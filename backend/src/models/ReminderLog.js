@@ -7,7 +7,7 @@ const reminderLogSchema = new mongoose.Schema(
             ref: 'User',
             required: true,
         },
-        // YYYY-MM-DD in IST — one record per student per calendar day
+        // YYYY-MM-DD in IST
         date: {
             type: String,
             required: true,
@@ -15,6 +15,7 @@ const reminderLogSchema = new mongoose.Schema(
         sentAt: {
             type: Date,
             default: Date.now,
+            index: true, // indexed for the 14-min rolling dedup query
         },
         reasonFlags: {
             attendanceMissing: { type: Boolean, default: false },
@@ -24,7 +25,7 @@ const reminderLogSchema = new mongoose.Schema(
     { timestamps: false }
 );
 
-// Indexes for querying
+// Compound index for lookup: "find most recent reminder for this user today"
 reminderLogSchema.index({ userId: 1, date: 1 });
 
 module.exports = mongoose.model('ReminderLog', reminderLogSchema);

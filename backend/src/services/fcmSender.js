@@ -22,13 +22,21 @@ function getMessaging() {
         );
     }
 
-    const serviceAccount = require(path.resolve(saPath));
+    console.log(`[FCM] Loading service account from: ${path.resolve(saPath)}`);
+
+    let serviceAccount;
+    try {
+        serviceAccount = require(path.resolve(saPath));
+    } catch (err) {
+        throw new Error(`[FCM] Failed to load service account file at "${saPath}": ${err.message}`);
+    }
 
     // Only initialise once (guard against hot-reload double-init)
     if (!admin.apps.length) {
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
         });
+        console.log('[FCM] ✅ Firebase Admin SDK initialized successfully.');
     }
 
     messagingInstance = admin.messaging();
@@ -41,22 +49,34 @@ function getMessaging() {
  * @param {string[]} tokens
  * @param {string}   title
  * @param {string}   body
- * @returns {{ successCount: number, failedTokens: string[] }}
+ * @returns {{ successCount: number, failureCount: number, failedTokens: string[], results: object[] }}
  */
 async function sendPushToTokens(tokens, title, body) {
     if (!tokens || tokens.length === 0) {
-        return { successCount: 0, failedTokens: [] };
+        console.log('[FCM] No tokens provided, skipping send.');
+        return { successCount: 0, failureCount: 0, failedTokens: [], results: [] };
     }
 
-    const messaging = getMessaging();
+    console.log(`[FCM] Sending to ${tokens.length} token(s)...`);
+
+    let messaging;
+    try {
+        messaging = getMessaging();
+    } catch (err) {
+        console.error('[FCM] ❌ Could not initialise Firebase Admin SDK:', err.message);
+        return { successCount: 0, failureCount: tokens.length, failedTokens: tokens, results: [] };
+    }
+
     const failedTokens = [];
+    const results = [];
     let successCount = 0;
 
-    // Send individually so we can track which tokens failed
+    // Send individually so we can track which tokens failed per-token
     await Promise.all(
         tokens.map(async (token) => {
+            const shortToken = token.slice(0, 25) + '…';
             try {
-                await messaging.send({
+                const messageId = await messaging.send({
                     token,
                     notification: { title, body },
                     webpush: {
@@ -65,7 +85,6 @@ async function sendPushToTokens(tokens, title, body) {
                             body,
                             icon: '/icons/icon-192x192.png',
                             badge: '/icons/icon-72x72.png',
-                            // Enable newlines in the body on supporting browsers
                             requireInteraction: false,
                         },
                         fcmOptions: {
@@ -73,24 +92,39 @@ async function sendPushToTokens(tokens, title, body) {
                         },
                     },
                 });
+
                 successCount += 1;
+                results.push({ token: shortToken, status: 'success', messageId });
+                console.log(`[FCM]   ✅ Token ${shortToken} → messageId: ${messageId}`);
+
             } catch (err) {
-                // Token is invalid or unregistered — mark for removal
-                const code = err?.errorInfo?.code || '';
-                if (
-                    code === 'messaging/registration-token-not-registered' ||
-                    code === 'messaging/invalid-registration-token' ||
-                    code === 'messaging/invalid-argument'
-                ) {
+                const errCode = err?.errorInfo?.code || err?.code || 'unknown';
+                const errMessage = err?.errorInfo?.message || err?.message || String(err);
+
+                console.error(`[FCM]   ❌ Token ${shortToken} FAILED`);
+                console.error(`[FCM]      code   : ${errCode}`);
+                console.error(`[FCM]      message: ${errMessage}`);
+
+                results.push({ token: shortToken, status: 'failed', errCode, errMessage });
+
+                // These codes mean the token is permanently invalid — remove from DB
+                const invalidCodes = [
+                    'messaging/registration-token-not-registered',
+                    'messaging/invalid-registration-token',
+                    'messaging/invalid-argument',
+                ];
+                if (invalidCodes.includes(errCode)) {
                     failedTokens.push(token);
-                } else {
-                    console.error(`[FCM] Unexpected error for token ${token.slice(0, 20)}…:`, err.message);
                 }
+                // Other errors (quota, internal) — token is still valid, just a transient failure
             }
         })
     );
 
-    return { successCount, failedTokens };
+    const failureCount = tokens.length - successCount;
+    console.log(`[FCM] Done. Sent: ${successCount}/${tokens.length}, Failed permanently: ${failedTokens.length}`);
+
+    return { successCount, failureCount, failedTokens, results };
 }
 
 module.exports = { sendPushToTokens };

@@ -76,4 +76,26 @@ const unregisterToken = async (req, res) => {
     }
 };
 
-module.exports = { registerToken, unregisterToken };
+/**
+ * POST /api/push/test-run  (protected, any logged-in user for testing)
+ *
+ * Manually triggers the reminder job without waiting for cron.
+ * Useful for debugging FCM delivery when developing.
+ */
+const testRunReminder = async (req, res) => {
+    console.log(`\n[Push] ⚡ Manual test-run triggered by user ${req.user._id} (${req.user.name || 'unknown'})`);
+    try {
+        const { runReminderJob } = require('../jobs/reminderJob');
+        const summary = await runReminderJob();
+        return res.json({
+            success: true,
+            message: 'Reminder job executed manually.',
+            summary,
+        });
+    } catch (err) {
+        console.error('[Push] test-run error:', err.message);
+        return res.status(500).json({ success: false, message: err.message });
+    }
+};
+
+module.exports = { registerToken, unregisterToken, testRunReminder };
