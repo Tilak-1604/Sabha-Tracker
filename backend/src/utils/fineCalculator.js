@@ -70,7 +70,7 @@ function calcSession(effectiveDays, presentDays, absentDays, missingDays, type, 
       rule = 'ABSENT_20';
       fine = (absentDays || 0) * 20;
       level = 'danger';
-    } else if (presentPct < 50) {
+    } else if (presentPct <= 50) {
       rule = 'ABSENT_10';
       fine = (absentDays || 0) * 10;
       level = 'warning';
