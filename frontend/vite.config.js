@@ -13,6 +13,10 @@ export default defineConfig({
       workbox: {
         importScripts: ['/firebase-messaging-sw.js'],
       },
+      devOptions: {
+        enabled: true,
+        type: 'module',
+      },
       manifest: {
         name: 'Hostel Sabha Tracker',
         short_name: 'Sabha Tracker',

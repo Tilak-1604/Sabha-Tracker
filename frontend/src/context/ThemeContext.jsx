@@ -1,36 +1,26 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 
 const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-    const [theme, setTheme] = useState(() => {
-        const stored = localStorage.getItem('tracker-theme');
-        if (stored) return stored;
-        return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-    });
-
     useEffect(() => {
         const root = document.documentElement;
-        if (theme === 'light') {
-            root.classList.add('theme-light');
-        } else {
-            root.classList.remove('theme-light');
-        }
-        localStorage.setItem('tracker-theme', theme);
+        // Enforce dark theme only
+        root.classList.remove('theme-light');
+        localStorage.setItem('tracker-theme', 'dark');
 
-        // Update the meta theme-color dynamically based on the current theme
+        // Update the meta theme-color dynamically for PWA
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
-            metaThemeColor.setAttribute('content', theme === 'light' ? '#f0f2f8' : '#101114'); // Corresponds to standard background colors
+            metaThemeColor.setAttribute('content', '#101114'); // Corresponds to standard dark background color
         }
-    }, [theme]);
+    }, []);
 
-    const toggleTheme = () => {
-        setTheme(prev => prev === 'light' ? 'dark' : 'light');
-    };
+    // No-op for compatibility
+    const toggleTheme = () => { };
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme }}>
+        <ThemeContext.Provider value={{ theme: 'dark', toggleTheme }}>
             {children}
         </ThemeContext.Provider>
     );

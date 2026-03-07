@@ -24,7 +24,7 @@ const reminderLogSchema = new mongoose.Schema(
     { timestamps: false }
 );
 
-// Guarantees at most 1 reminder per student per IST day
-reminderLogSchema.index({ userId: 1, date: 1 }, { unique: true });
+// Indexes for querying
+reminderLogSchema.index({ userId: 1, date: 1 });
 
 module.exports = mongoose.model('ReminderLog', reminderLogSchema);

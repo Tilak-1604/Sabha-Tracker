@@ -5,13 +5,13 @@ const { runReminderJob } = require('./reminderJob');
  * Schedule the nightly reminder at 22:15 Asia/Kolkata.
  *
  * node-cron 5-field format: minute hour day-of-month month day-of-week
- * "15 22 * * *" = every day at 22:15 with the given timezone.
- */
+ * "*/15 * * * * " = every 15 minutes
+    */
 function startReminderScheduler() {
     cron.schedule(
-        '15 22 * * *',
+        '*/15 * * * *',
         async () => {
-            console.log('[Scheduler] Reminder job triggered at 22:15 IST');
+            console.log('[Scheduler] Reminder job triggered (15-min interval)');
             try {
                 await runReminderJob();
             } catch (err) {
@@ -21,7 +21,7 @@ function startReminderScheduler() {
         { timezone: 'Asia/Kolkata' }
     );
 
-    console.log('[Scheduler] Nightly reminder scheduled: 22:15 Asia/Kolkata');
+    console.log('[Scheduler] 15-minute interval reminder scheduled');
 }
 
 module.exports = { startReminderScheduler };

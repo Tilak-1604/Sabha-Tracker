@@ -41,13 +41,6 @@ async function runReminderJob() {
 async function processUser(user, todayIST) {
     const userId = user._id;
 
-    // ── Anti-spam: skip if already sent today ────────────────────────────────
-    const alreadySent = await ReminderLog.findOne({ userId, date: todayIST });
-    if (alreadySent) {
-        console.log(`[Reminder] Already sent for user ${userId} on ${todayIST}, skipping.`);
-        return;
-    }
-
     // ── Attendance check ─────────────────────────────────────────────────────
     const attendance = await Attendance.findOne({ userId, date: todayIST });
 
@@ -126,19 +119,13 @@ async function processUser(user, todayIST) {
         }
     }
 
-    // ── Log to ReminderLog (upsert to handle race conditions) ─────────────────
-    await ReminderLog.findOneAndUpdate(
-        { userId, date: todayIST },
-        {
-            $setOnInsert: {
-                userId,
-                date: todayIST,
-                sentAt: new Date(),
-                reasonFlags: { attendanceMissing, cheshtaPending },
-            },
-        },
-        { upsert: true, new: true }
-    );
+    // ── Log to ReminderLog ─────────────────
+    await ReminderLog.create({
+        userId,
+        date: todayIST,
+        sentAt: new Date(),
+        reasonFlags: { attendanceMissing, cheshtaPending },
+    });
 }
 
 module.exports = { runReminderJob, getTodayIST };

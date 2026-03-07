@@ -55,14 +55,6 @@ export default function Navbar() {
                 </div>
 
                 <div className="navbar-user">
-                    <button
-                        onClick={toggleTheme}
-                        className="btn btn-ghost"
-                        style={{ padding: '0.4rem', border: 'none', background: 'transparent' }}
-                        aria-label="Toggle theme"
-                    >
-                        {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-                    </button>
 
                     <Link to="/profile" className="user-chip-link" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
                         <div className="user-chip" style={{ display: 'none', '@media (minWidth: 600px)': { display: 'flex' } }}>

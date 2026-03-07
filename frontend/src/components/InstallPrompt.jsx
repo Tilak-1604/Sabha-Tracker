@@ -47,37 +47,59 @@ export default function InstallPrompt() {
     if (!showBanner) return null;
 
     return (
-        <div style={{
-            margin: '1rem',
-            padding: '1rem 1.25rem',
-            background: 'linear-gradient(135deg, var(--brand), var(--brand-dk))',
-            borderRadius: 'var(--radius)',
-            color: '#fff',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: '1rem',
-            boxShadow: '0 4px 16px hsla(250, 75%, 50%, 0.3)'
-        }}>
-            <div>
-                <p style={{ fontWeight: 700, margin: 0, fontSize: '0.95rem' }}>Install Hostel Tracker</p>
-                <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.9 }}>One tap install, works like a native app</p>
+        <>
+            {/* Dark overlay backdrop to draw attention */}
+            <div style={{
+                position: 'fixed',
+                top: 0, left: 0, right: 0, bottom: 0,
+                background: 'rgba(0,0,0,0.5)',
+                backdropFilter: 'blur(3px)',
+                zIndex: 9998
+            }} />
+
+            {/* Prominent Modal */}
+            <div style={{
+                position: 'fixed',
+                bottom: '2rem',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 'calc(100% - 2rem)',
+                maxWidth: '400px',
+                background: 'linear-gradient(135deg, var(--brand), var(--brand-dk))',
+                borderRadius: 'var(--radius)',
+                color: '#fff',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                padding: '1.5rem',
+                gap: '1rem',
+                boxShadow: '0 12px 32px hsla(250, 75%, 20%, 0.6)',
+                zIndex: 9999
+            }}>
+                <div style={{ textAlign: 'center' }}>
+                    <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.25rem' }}>Install App Required</h3>
+                    <p style={{ margin: 0, fontSize: '0.9rem', opacity: 0.9 }}>
+                        To receive notifications and use the app optimally, please install it to your home screen.
+                    </p>
+                </div>
+                <button
+                    onClick={handleInstallClick}
+                    style={{
+                        background: '#fff',
+                        color: 'var(--brand-dk)',
+                        border: 'none',
+                        padding: '0.75rem 2rem',
+                        borderRadius: 'var(--radius)',
+                        fontWeight: 700,
+                        fontSize: '1rem',
+                        cursor: 'pointer',
+                        width: '100%',
+                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+                    }}
+                >
+                    Install App Now
+                </button>
             </div>
-            <button
-                onClick={handleInstallClick}
-                style={{
-                    background: '#fff',
-                    color: 'var(--brand-dk)',
-                    border: 'none',
-                    padding: '0.5rem 1rem',
-                    borderRadius: 'var(--radius-sm)',
-                    fontWeight: 700,
-                    fontSize: '0.85rem',
-                    cursor: 'pointer'
-                }}
-            >
-                Install
-            </button>
-        </div>
+        </>
     );
 }
